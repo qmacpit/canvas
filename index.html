@@ -4,14 +4,27 @@
     <meta charset="UTF-8">
     <title>proto-project</title>
 
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="stylesheets/css/style.css">
-
     <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="http://localhost:35729/livereload.js"></script>
+  
+    <style>
+      body {
+        margin: 0;
+        position: absolute;
+        top: 0; bottom:0 ; left: 0; right: 0;
+      }
+    </style>
+    <script>
+      var App = {};
+    </script>
+
 </head>
 <body>
-    <button type="button" class="btn btn-success">Success<i class="fa fa-check"></i></button>
+    <canvas id="canvas"></canvas>
+
+    <script src="js/point.js"></script>
+    <script src="js/canvasController.js"></script>
+    <script src="js/main.js"></script>
+
 </body>
 </html>
