@@ -5,6 +5,7 @@
   var CanvasController = function(canvasElement) {
     this._stage = new createjs.Stage(canvasElement);    
     this._points = [];
+    this._lines = [];
     this._pointPositions = [];
     this._calculator = new App.Calculator(canvasElement.width, canvasElement.height);
     canvasElement.addEventListener('click', this.onCanvasClicked.bind(this));
@@ -33,8 +34,7 @@
         y: event.pageY
       });
       if (this._pointPositions.length === NO_OF_POINTS) {
-        this.evaluateRemainingPoint();
-        this.drawLines();     
+        this.evaluateRemainingPoint();        
       }
     }
   }
@@ -46,7 +46,6 @@
     };
     if (this._pointPositions.length === NO_OF_POINTS) {
       this.evaluateRemainingPoint();   
-      this.drawLines(); 
     }
   };
 
@@ -56,21 +55,45 @@
       this._remainingPoint.remove();
     if (remainingPoint) {      
       this._remainingPoint  = new App.Point({        
-        x: remainingPoint.x,
-        y: remainingPoint.y,
+        x: remainingPoint.rPoint.x,
+        y: remainingPoint.rPoint.y,
         stage: this._stage,        
       });
       this._remainingPoint.draw(this._stage);
+      this.drawLines(remainingPoint); 
     }
   };
 
-  CanvasController.prototype.drawLines = function() {
-    var line = new App.Line({
-      start: this._pointPositions[0],
-      end: this._pointPositions[1],
-      stage: this._stage
-    });
-    line.draw();
+  function _drawSingleLine(index, start, stop) {
+    var line = this._lines[index];
+    if (!line) {      
+      line = new App.Line({
+        start: start,
+        end: stop,
+        stage: this._stage
+      });
+      this._lines[index] = line;
+      line.draw();
+    } else {
+      line.redraw(start, stop);
+    }
+
+  }
+
+  CanvasController.prototype.drawLines = function(remainingPoint) {
+    var strategy = remainingPoint.strategy;
+    if (this._remainingPoint) {
+      //LINE 0->1
+      _drawSingleLine.call(this, 0, this._pointPositions[strategy[0]], this._pointPositions[strategy[1]]);
+      //LINE 0->2
+      _drawSingleLine.call(this, 1, this._pointPositions[strategy[0]], this._pointPositions[strategy[2]]);
+      //LINE 3->1
+      _drawSingleLine.call(this, 2, remainingPoint.rPoint, this._pointPositions[strategy[1]]);
+      //LINE 3->2
+      _drawSingleLine.call(this, 3, remainingPoint.rPoint, this._pointPositions[strategy[2]]);
+    } else {
+      //remove all lines
+    }    
   }
 
   App.CanvasController = CanvasController;

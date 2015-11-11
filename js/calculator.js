@@ -54,11 +54,17 @@
       calculateRemainingPoint: function(pointPositions){
         var rPoint = _calculateRemainingPoint(pickPointsForStrategy(pointPositions));
         if (fitsCanvas(rPoint))
-          return rPoint;        
+          return {
+            rPoint: rPoint,
+            strategy: POINT_STRATEGY[_strategyIndex]  
+          }
         for (_strategyIndex = 0; _strategyIndex < POINT_STRATEGY.length; _strategyIndex++) {
           rPoint = _calculateRemainingPoint(pickPointsForStrategy(pointPositions));
           if (fitsCanvas(rPoint))
-            return rPoint;
+            return {
+              rPoint: rPoint,
+              strategy: POINT_STRATEGY[_strategyIndex]  
+            }
         }        
         _strategyIndex = 0;
       }
