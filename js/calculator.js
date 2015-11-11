@@ -12,6 +12,7 @@
 
   App.Calculator = {
     calculateRemainingPoint: function(pointPositions){
+      // var pointsConfig 
       return _calculateRemainingPoint(
         pointPositions[0],
         pointPositions[1],

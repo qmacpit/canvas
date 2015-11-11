@@ -29,34 +29,42 @@
         x: event.pageX,
         y: event.pageY
       });
+      if (this._pointPositions.length === NO_OF_POINTS) {
+        this.evaluateRemainingPoint();
+        this.drawLines();     
+      }
     }
   }
 
-  CanvasController.prototype.pointPositionChanged = function(id, x, y) {
-    console.log(arguments)
+  CanvasController.prototype.pointPositionChanged = function(id, x, y) {    
     this._pointPositions[id] = {
       x: x,
       y: y
     };
+    this.evaluateRemainingPoint();   
+    this.drawLines(); 
+  };
+
+  CanvasController.prototype.evaluateRemainingPoint = function() {
     var remainingPoint = App.Calculator.calculateRemainingPoint(this._pointPositions);
     if (this._remainingPoint)
       this._remainingPoint.remove();
     this._remainingPoint  = new App.Point({        
-        x: remainingPoint.x,
-        y: remainingPoint.y,
-        stage: this._stage,
-        // onPointPositionChanged: function(index) {
-        //   return function(x, y) {
-        //     this.pointPositionChanged(index, x, y);
-        //   }.bind(this)
-        // }.call(this, this._points.length)
-      });
-      this._remainingPoint.draw(this._stage);
+      x: remainingPoint.x,
+      y: remainingPoint.y,
+      stage: this._stage,        
+    });
+    this._remainingPoint.draw(this._stage);
   };
 
-  CanvasController.prototype.evaluatePoint = function() {
-
-  };
+  CanvasController.prototype.drawLines = function() {
+    var line = new App.Line({
+      start: this._pointPositions[0],
+      end: this._pointPositions[1],
+      stage: this._stage
+    });
+    line.draw();
+  }
 
   App.CanvasController = CanvasController;
 
