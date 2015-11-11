@@ -54,12 +54,14 @@
     var remainingPoint = this._calculator.calculateRemainingPoint(this._pointPositions);
     if (this._remainingPoint)
       this._remainingPoint.remove();
-    this._remainingPoint  = new App.Point({        
-      x: remainingPoint.x,
-      y: remainingPoint.y,
-      stage: this._stage,        
-    });
-    this._remainingPoint.draw(this._stage);
+    if (remainingPoint) {      
+      this._remainingPoint  = new App.Point({        
+        x: remainingPoint.x,
+        y: remainingPoint.y,
+        stage: this._stage,        
+      });
+      this._remainingPoint.draw(this._stage);
+    }
   };
 
   CanvasController.prototype.drawLines = function() {
