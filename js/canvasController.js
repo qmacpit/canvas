@@ -6,12 +6,15 @@
     this._stage = new createjs.Stage(canvasElement);    
     this._points = [];
     this._pointPositions = [];
+    this._calculator = new App.Calculator(canvasElement.width, canvasElement.height);
     canvasElement.addEventListener('click', this.onCanvasClicked.bind(this));
     // this._stage.on('mousedown', this.onCanvasClicked.bind(this));
   };  
 
   CanvasController.prototype.onCanvasClicked = function(event) {
     console.log("canvas clicked")
+    console.log(event.pageX)
+    console.log(event.pageY)
     if (this._points.length < NO_OF_POINTS) {
       var point  = new App.Point({        
         x: event.pageX,
@@ -41,12 +44,14 @@
       x: x,
       y: y
     };
-    this.evaluateRemainingPoint();   
-    this.drawLines(); 
+    if (this._pointPositions.length === NO_OF_POINTS) {
+      this.evaluateRemainingPoint();   
+      this.drawLines(); 
+    }
   };
 
   CanvasController.prototype.evaluateRemainingPoint = function() {
-    var remainingPoint = App.Calculator.calculateRemainingPoint(this._pointPositions);
+    var remainingPoint = this._calculator.calculateRemainingPoint(this._pointPositions);
     if (this._remainingPoint)
       this._remainingPoint.remove();
     this._remainingPoint  = new App.Point({        

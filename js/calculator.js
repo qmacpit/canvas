@@ -1,24 +1,68 @@
 (function(){
 
-  function _calculateRemainingPoint(point1, point2, point3) {
-    var distanceX_21 = point2.x - point1.x;
-    var distanceY_21 = point2.y - point1.y;
+  var POINT_STRATEGY = [
+    [0, 1, 2],
+    [0, 2, 1],
+    [1, 2, 0],
+    [1, 0, 2],
+    [2, 0, 1],
+    [2, 1, 0]
+  ];
+
+  App.Calculator = function(canvasWidth, canvasHeight) {
+    
+    var _canvasWidth = canvasWidth,
+        _canvasHeight = canvasHeight,
+        _strategyIndex = 0;
+
+    function _calculateRemainingPoint(points) {
+      var distanceX_21 = points[1].x - points[0].x,
+          distanceY_21 = points[1].y - points[0].y,
+          rPoint;
+
+      rPoint = {
+        x: points[2].x + distanceX_21,
+        y: points[2].y + distanceY_21
+      }
+      // if (fitsCanvas(rPoint))
+        return rPoint;
+      // return {
+      //   x: points[2].x - distanceX_21,
+      //   y: points[2].y - distanceY_21 
+      // }
+    }
+
+    function fitsCanvas(point) {
+      console.log(point.x + "<=" + _canvasWidth )
+      console.log(point.y + "<=" + _canvasHeight )
+      if (point.x < 0 || point.y < 0)
+        return;
+      return point.x <= _canvasWidth 
+              && point.y <= _canvasHeight;
+    }
+
+    function pickPointsForStrategy(pointPositions) {
+      var currentStrategy = POINT_STRATEGY[_strategyIndex];
+      return [
+        pointPositions[currentStrategy[0]],
+        pointPositions[currentStrategy[1]],
+        pointPositions[currentStrategy[2]]
+      ]
+    }
 
     return {
-      x: point3.x + distanceX_21,
-      y: point3.y + distanceY_21
-    }
-  }
-
-  App.Calculator = {
-    calculateRemainingPoint: function(pointPositions){
-      // var pointsConfig 
-      return _calculateRemainingPoint(
-        pointPositions[0],
-        pointPositions[1],
-        pointPositions[2]
-      );
-    }
+      calculateRemainingPoint: function(pointPositions){
+        var rPoint = _calculateRemainingPoint(pickPointsForStrategy(pointPositions));
+        if (fitsCanvas(rPoint))
+          return rPoint;
+        _strategyIndex = 0;
+        for (; _strategyIndex < POINT_STRATEGY.length; _strategyIndex++) {
+          rPoint = _calculateRemainingPoint(pickPointsForStrategy(pointPositions));
+          if (fitsCanvas(rPoint))
+            return rPoint;
+        }        
+      }
+    };    
   };
 
 })();
