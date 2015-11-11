@@ -67,6 +67,28 @@
             }
         }        
         _strategyIndex = 0;
+      },
+      findCentreOfMass(pointPositions, rPointData) {
+        var currentStrategy = rPointData.strategy,
+            rPoint = rPointData.rPoint,
+            point = pointPositions[currentStrategy[0]],
+            x, y;
+        x = Math.abs(point.x - rPoint.x) / 2;
+        y = Math.abs(point.y - rPoint.y) / 2;
+
+        if (point.x > rPoint.x)
+          x = point.x - x;
+        else
+          x = point.x + x;
+
+        if (point.y > rPoint.y)
+          y = point.y - y;
+        else
+          y = point.y + y;
+        return {
+          x: x,
+          y: y
+        };
       }
     };    
   };

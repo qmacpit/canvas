@@ -7,8 +7,9 @@
         _line;   
 
     function _needsRedraw(start, end) {
-      return (start.x !== _start.x)
-              || (end.y !== _end.y)
+      // return (start.x !== _start.x)
+      //         || (end.y !== _end.y)
+      return true;
     }
 
     return {
@@ -18,8 +19,8 @@
         _line = new createjs.Shape();        
         _line
           .graphics
-          .setStrokeStyle(3, "round", "round")
-          .beginStroke("blue")
+          .setStrokeStyle(5, "round", "round")
+          .beginStroke("#3498db")
           .moveTo(_start.x, _start.y)
           .lineTo(_end.x, _end.y);        
         _stage.addChild(_line);                

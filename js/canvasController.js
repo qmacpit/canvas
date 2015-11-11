@@ -51,19 +51,13 @@
 
   CanvasController.prototype.evaluateRemainingPoint = function() {
     var remainingPoint = this._calculator.calculateRemainingPoint(this._pointPositions);
-    if (this._remainingPoint)
-      this._remainingPoint.remove();
     if (remainingPoint) {      
-      this._remainingPoint  = new App.Point({        
-        x: remainingPoint.rPoint.x,
-        y: remainingPoint.rPoint.y,
-        stage: this._stage,        
-      });
-      this._remainingPoint.draw(this._stage);
       this.drawLines(remainingPoint); 
+      this.drawCentreOfMass(remainingPoint);
     }
   };
 
+  //TODO: move to prototype
   function _drawSingleLine(index, start, stop) {
     var line = this._lines[index];
     if (!line) {      
@@ -81,20 +75,31 @@
   }
 
   CanvasController.prototype.drawLines = function(remainingPoint) {
-    var strategy = remainingPoint.strategy;
-    if (this._remainingPoint) {
-      //LINE 0->1
-      _drawSingleLine.call(this, 0, this._pointPositions[strategy[0]], this._pointPositions[strategy[1]]);
-      //LINE 0->2
+    if (remainingPoint) {
+      var strategy = remainingPoint.strategy;      
+      _drawSingleLine.call(this, 0, this._pointPositions[strategy[0]], this._pointPositions[strategy[1]]);      
       _drawSingleLine.call(this, 1, this._pointPositions[strategy[0]], this._pointPositions[strategy[2]]);
-      //LINE 3->1
-      _drawSingleLine.call(this, 2, remainingPoint.rPoint, this._pointPositions[strategy[1]]);
-      //LINE 3->2
+      _drawSingleLine.call(this, 2, remainingPoint.rPoint, this._pointPositions[strategy[1]]);      
       _drawSingleLine.call(this, 3, remainingPoint.rPoint, this._pointPositions[strategy[2]]);
     } else {
-      //remove all lines
+      //TODO: remove all lines
+      for (var i = 0, l = this._lines.length; i < l; i++)
+        this._lines[0].remove();
     }    
-  }
+  };
+
+  CanvasController.prototype.drawCentreOfMass = function(remainingPoint) {
+    var centerPoint = this._calculator.findCentreOfMass(this._pointPositions, remainingPoint);
+    if (this._centreOfMass)
+      this._centreOfMass.remove();
+    this._centreOfMass = new App.Point({        
+      x: centerPoint.x,
+      y: centerPoint.y,
+      stage: this._stage,
+      color: "#f1c40f"        
+    });
+    this._centreOfMass.draw();
+  };
 
   App.CanvasController = CanvasController;
 
