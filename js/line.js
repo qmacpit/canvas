@@ -8,8 +8,8 @@
 
     function _needsRedraw(start, end) {
       // return (start.x !== _start.x)
-      //         || (end.y !== _end.y)
-      return true;
+      //         || (end.y !== _end.y)      
+      return true;              
     }
 
     return {
@@ -32,7 +32,13 @@
           _end = end;
           this.remove();
           this.draw();
-        }            
+        } else {
+          console.log(start)
+          console.log(_start)
+          console.log(end)
+          console.log(_end)
+        }   
+
       },
       remove() {
         _stage.removeChild(_line);

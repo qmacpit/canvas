@@ -13,6 +13,7 @@
   };  
 
   CanvasController.prototype.onCanvasClicked = function(event) {
+    //TODO: block this event
     console.log("canvas clicked")
     console.log(event.pageX)
     console.log(event.pageY)
@@ -81,8 +82,7 @@
       _drawSingleLine.call(this, 1, this._pointPositions[strategy[0]], this._pointPositions[strategy[2]]);
       _drawSingleLine.call(this, 2, remainingPoint.rPoint, this._pointPositions[strategy[1]]);      
       _drawSingleLine.call(this, 3, remainingPoint.rPoint, this._pointPositions[strategy[2]]);
-    } else {
-      //TODO: remove all lines
+    } else {      
       for (var i = 0, l = this._lines.length; i < l; i++)
         this._lines[0].remove();
     }    

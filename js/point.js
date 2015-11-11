@@ -10,6 +10,13 @@
 
     function _bindEvents() {      
       if (_onPointPositionChanged) {
+        _circle.on("click", function(event){
+          console.log("point click")
+          event.stopPropagation();
+        });
+        _circle.on("mouseUp", function(event){
+          event.stopPropagation();
+        });
         _circle.on("pressmove", function (event) {
           console.log("pressmove")        
           _circle.x = event.stageX;
