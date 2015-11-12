@@ -92,7 +92,7 @@
       this._legendController.report(
         "rectArea", 
         remainingPoint.area
-      );
+      ); 
       this.drawLines(remainingPoint); 
       this.drawCentreOfMass(remainingPoint);            
     }
@@ -116,14 +116,19 @@
         radius = this._calculator.getRadius(remainingPoint.area);
 
     if (this._circle) {
-      return this._circle.redraw(centerPoint, radius)
-    } 
-    this._circle = new App.Circle({
-      stage: this._stage,
-      point: centerPoint,
-      radius: radius
-    });
-    this._circle.draw();    
+      this._circle.redraw(centerPoint, radius)
+    } else {
+      this._circle = new App.Circle({
+        stage: this._stage,
+        point: centerPoint,
+        radius: radius
+      });
+      this._circle.draw();    
+    }    
+    this._legendController.report(
+      "circleArea", 
+      this._calculator.calculateCircleArea(radius)
+    );
   };
 
   App.CanvasController = CanvasController;

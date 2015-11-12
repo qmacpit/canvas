@@ -15,7 +15,7 @@
         _canvasHeight = canvasHeight,
         _strategyIndex = 0;
 
-    function _calculateRemainingPoint(points) {
+    function _calcRemainingPoint(points) {
       var distanceX_21 = points[1].x - points[0].x,
           distanceY_21 = points[1].y - points[0].y,
           rPoint;
@@ -104,51 +104,60 @@
       ];
     }
 
-    return {
-      getRadius: _getRadius,
-      calculateRemainingPoint: function(pointPositions){
-        var pointsForStrategy = pickPointsForStrategy(pointPositions),
-            rPoint = _calculateRemainingPoint(pointsForStrategy);
+    function _calculateRemainingPoint(pointPositions) {
+      var pointsForStrategy = pickPointsForStrategy(pointPositions),
+          rPoint = _calcRemainingPoint(pointsForStrategy);
+      if (fitsCanvas(rPoint))
+        return {
+          rPoint: rPoint,
+          strategy: POINT_STRATEGY[_strategyIndex],
+          area: _calculateArea(pointsForStrategy, rPoint)
+        }
+      for (_strategyIndex = 0; _strategyIndex < POINT_STRATEGY.length; _strategyIndex++) {
+        pointsForStrategy = pickPointsForStrategy(pointPositions);
+        rPoint = _calcRemainingPoint(pointsForStrategy);
         if (fitsCanvas(rPoint))
           return {
             rPoint: rPoint,
             strategy: POINT_STRATEGY[_strategyIndex],
             area: _calculateArea(pointsForStrategy, rPoint)
           }
-        for (_strategyIndex = 0; _strategyIndex < POINT_STRATEGY.length; _strategyIndex++) {
-          pointsForStrategy = pickPointsForStrategy(pointPositions);
-          rPoint = _calculateRemainingPoint(pointsForStrategy);
-          if (fitsCanvas(rPoint))
-            return {
-              rPoint: rPoint,
-              strategy: POINT_STRATEGY[_strategyIndex],
-              area: _calculateArea(pointsForStrategy, rPoint)
-            }
-        }        
-        _strategyIndex = 0;
-      },
-      findCentreOfMass: function(pointPositions, rPointData) {
-        var currentStrategy = rPointData.strategy,
-            rPoint = rPointData.rPoint,
-            point = pointPositions[currentStrategy[0]],
-            x, y;
-        x = Math.abs(point.x - rPoint.x) / 2;
-        y = Math.abs(point.y - rPoint.y) / 2;
+      }        
+      _strategyIndex = 0;
+    }
 
-        if (point.x > rPoint.x)
-          x = point.x - x;
-        else
-          x = point.x + x;
+    function _findCentreOfMass(pointPositions, rPointData) {
+      var currentStrategy = rPointData.strategy,
+          rPoint = rPointData.rPoint,
+          point = pointPositions[currentStrategy[0]],
+          x, y;
+      x = Math.abs(point.x - rPoint.x) / 2;
+      y = Math.abs(point.y - rPoint.y) / 2;
 
-        if (point.y > rPoint.y)
-          y = point.y - y;
-        else
-          y = point.y + y;
-        return {
-          x: x,
-          y: y
-        };
-      }
+      if (point.x > rPoint.x)
+        x = point.x - x;
+      else
+        x = point.x + x;
+
+      if (point.y > rPoint.y)
+        y = point.y - y;
+      else
+        y = point.y + y;
+      return {
+        x: x,
+        y: y
+      };
+    }
+
+    function _calculateCircleArea(radius) {
+      return Math.PI * radius * radius;
+    }
+
+    return {
+      getRadius: _getRadius,
+      calculateCircleArea: _calculateCircleArea,
+      calculateRemainingPoint: _calculateRemainingPoint,
+      findCentreOfMass: _findCentreOfMass      
     };    
   };
 

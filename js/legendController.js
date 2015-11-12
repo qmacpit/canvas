@@ -3,7 +3,7 @@
   var LegendController = function() {
     var container = document.getElementById("legend"),
         elements = {};
-
+      
     function _createElement() {
       var element = document.createElement("span");
       container.appendChild(element);
