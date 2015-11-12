@@ -15,6 +15,10 @@
     _container.appendChild(_aboutLink);
     _container.appendChild(_resetLink);
 
+    _aboutLink.addEventListener("click", function(){
+      alert("author: Maciej Pitucha \nhow to: \n- click on a client area in order to create a point\n- all selected points can be moved around \n-parallelogram will be drawn as soon as it is possible");
+    })
+
     function _createElement() {
       var element = document.createElement("span");
       _container.appendChild(element);
