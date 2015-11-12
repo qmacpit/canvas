@@ -60,7 +60,7 @@
     }
 
     function _calculateArea(pointsForStrategy, rPoint) {
-      var hPoint, bPoint, b, bFunc, hFunc, hCrossingPoint,
+      var hPoint, bPoint, b, bFunc, hFunc, hCrossingPoint, h,
           length01 = _calcLength(pointsForStrategy[0], pointsForStrategy[1]),
           length02 = _calcLength(pointsForStrategy[0], pointsForStrategy[2]);
 
@@ -77,8 +77,12 @@
       bFunc = _getLineFunction(pointsForStrategy[0], bPoint);
       hFunc = _getParallelFunciton(bFunc.a, hPoint);
       hCrossingPoint = _getCrossingPoint(bFunc, hFunc);
-      console.log(hCrossingPoint);
-      return hCrossingPoint;
+      h = _calcLength(hCrossingPoint, hPoint);
+      return h * b;
+    }
+
+    function _getRadius(area) {
+      return Math.sqrt(area / Math.PI);
     }
 
     function fitsCanvas(point) {
@@ -101,6 +105,7 @@
     }
 
     return {
+      getRadius: _getRadius,
       calculateRemainingPoint: function(pointPositions){
         var pointsForStrategy = pickPointsForStrategy(pointPositions),
             rPoint = _calculateRemainingPoint(pointsForStrategy);

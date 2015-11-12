@@ -50,6 +50,10 @@
   }
 
   CanvasController.prototype.pointPositionChanged = function(id, x, y) {    
+    this._legendController.report(
+        "p" + id, 
+        _buildPointData(x, y)
+      );
     this._pointPositions[id] = {
       x: x,
       y: y
@@ -66,19 +70,12 @@
         "p3", 
         _buildPointData(remainingPoint.rPoint.x, remainingPoint.rPoint.y)
       );
+      this._legendController.report(
+        "rectArea", 
+        remainingPoint.area
+      );
       this.drawLines(remainingPoint); 
-      this.drawCentreOfMass(remainingPoint);
-
-      if (this._hPoint)
-        this._hPoint.remove();
-      this._hPoint = new App.Point({        
-        x: remainingPoint.area.x,
-        y: remainingPoint.area.y,
-        stage: this._stage,
-        color: "#f1c40f"        
-      });
-      this._hPoint.draw();
-
+      this.drawCentreOfMass(remainingPoint);            
     }
   };
 
@@ -113,16 +110,27 @@
   };
 
   CanvasController.prototype.drawCentreOfMass = function(remainingPoint) {
-    var centerPoint = this._calculator.findCentreOfMass(this._pointPositions, remainingPoint);
-    if (this._centreOfMass)
-      this._centreOfMass.remove();
-    this._centreOfMass = new App.Point({        
-      x: centerPoint.x,
-      y: centerPoint.y,
+    var centerPoint = this._calculator.findCentreOfMass(this._pointPositions, remainingPoint),
+        radius = this._calculator.getRadius(remainingPoint.area);
+
+    if (this._circle) {
+      return this._circle.redraw(centerPoint, radius)
+    } 
+    this._circle = new App.Circle({
       stage: this._stage,
-      color: "#f1c40f"        
+      point: centerPoint,
+      radius: radius
     });
-    this._centreOfMass.draw();
+    this._circle.draw();
+    // if (this._centreOfMass)
+    //   this._centreOfMass.remove();
+    // this._centreOfMass = new App.Point({        
+    //   x: centerPoint.x,
+    //   y: centerPoint.y,
+    //   stage: this._stage,
+    //   color: "#f1c40f"        
+    // });
+    // this._centreOfMass.draw();    
   };
 
   App.CanvasController = CanvasController;

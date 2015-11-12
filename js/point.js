@@ -10,16 +10,6 @@
 
     function _bindEvents() {      
       if (_onPointPositionChanged) {
-        // _circle.on("click", function(event){
-        //   console.log("point click")
-        //   event.stopPropagation();
-        //   event.stopImmediatePropagation();
-        //   event.bubbles = false;
-        // });
-        // _circle.on("mouseUp", function(event){
-        //   event.stopPropagation();
-        //   event.stopImmediatePropagation();
-        // });
         _circle.on("pressmove", function (event) {
           console.log("pressmove")        
           _circle.x = event.stageX;
