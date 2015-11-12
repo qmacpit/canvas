@@ -10,8 +10,7 @@
 
     function _bindEvents() {      
       if (_onPointPositionChanged) {
-        _circle.on("pressmove", function (event) {
-          console.log("pressmove")        
+        _circle.on("pressmove", function (event) {          
           _circle.x = event.stageX;
           _circle.y = event.stageY;        
           _stage.update();
