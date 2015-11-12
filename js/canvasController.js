@@ -3,30 +3,23 @@
   var NO_OF_POINTS = 3;
 
   var CanvasController = function(canvasElement) {
-    this._stage = new createjs.Stage("canvas");    
+    this._stage = new createjs.Stage(canvasElement);    
     this._points = [];
     this._lines = [];
     this._pointPositions = [];
     this._calculator = new App.Calculator(canvasElement.width, canvasElement.height);
-    // canvasElement.addEventListener('click', this.onCanvasClicked.bind(this));
-    // this._stage.on('click', this.onCanvasClicked.bind(this));
-    console.log(this._stage.mouseChildren   )
-    // this._stage.mouseChildren = false;
-
+    
     this.background = new createjs.Shape();
-    this.background.graphics.beginFill("white").drawRoundRect(0, 0, canvasElement.width, canvasElement.height, 10);
+    this.background
+      .graphics
+      .beginFill("#fff")
+      .drawRoundRect(0, 0, canvasElement.width, canvasElement.height, 10);
     this._stage.stage.addChild(this.background);
     this.background.on("click", this.onCanvasClicked.bind(this), null, false, null, false);
-    // this.background.on("click", function(event){console.log("2a"); console.log(event)}, null, false, null, true);
     this._stage.update();
   };  
 
-  CanvasController.prototype.onCanvasClicked = function(event) {
-    //TODO: block this event
-    console.log("canvas clicked")
-    console.log(event.stageX)
-    console.log(event.stageY)
-    console.log(event)
+  CanvasController.prototype.onCanvasClicked = function(event) {    
     if (this._points.length < NO_OF_POINTS) {
       var point  = new App.Point({        
         x: event.stageX,
