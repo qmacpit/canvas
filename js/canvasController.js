@@ -8,6 +8,7 @@
     this._lines = [];
     this._pointPositions = [];
     this._calculator = new App.Calculator(canvasElement.width, canvasElement.height);
+    this._legendController = new App.LegendController();
     
     this.background = new createjs.Shape();
     this.background
@@ -19,6 +20,10 @@
     this._stage.update();
   };  
 
+  function _buildPointData(x, y) {
+    return "(" + x + "," + y + ")";
+  }
+
   CanvasController.prototype.onCanvasClicked = function(event) {    
     if (this._points.length < NO_OF_POINTS) {
       var point  = new App.Point({        
@@ -28,10 +33,11 @@
         onPointPositionChanged: function(index) {
           return function(x, y) {
             this.pointPositionChanged(index, x, y);
-          }.bind(this)
+          }.bind(this);
         }.call(this, this._points.length)
       });
       point.draw(this._stage);
+      this._legendController.report("p" + this._points.length, _buildPointData(event.stageX, event.stageY));
       this._points.push(point);
       this._pointPositions.push({
         x: event.stageX,
@@ -56,8 +62,23 @@
   CanvasController.prototype.evaluateRemainingPoint = function() {
     var remainingPoint = this._calculator.calculateRemainingPoint(this._pointPositions);
     if (remainingPoint) {      
+      this._legendController.report(
+        "p3", 
+        _buildPointData(remainingPoint.rPoint.x, remainingPoint.rPoint.y)
+      );
       this.drawLines(remainingPoint); 
       this.drawCentreOfMass(remainingPoint);
+
+      if (this._hPoint)
+        this._hPoint.remove();
+      this._hPoint = new App.Point({        
+        x: remainingPoint.area.x,
+        y: remainingPoint.area.y,
+        stage: this._stage,
+        color: "#f1c40f"        
+      });
+      this._hPoint.draw();
+
     }
   };
 

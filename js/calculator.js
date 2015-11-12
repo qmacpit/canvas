@@ -27,11 +27,61 @@
       return rPoint;      
     }
 
+    function _calcLength(start, end) {
+      var x = end.x - start.x,
+          y = end.y - start.y;
+      return Math.sqrt(x*x + y*y);
+    }
+
+    function _getLineFunction(point1, point2) {
+      var a, b;
+      a = (point2.y - point1.y) / (point2.x - point1.x);
+      b = point2.y - a * point2.x;
+      return {
+        a: a,
+        b: b
+      }
+    }
+
+    function _getCrossingPoint(func1, func2) {
+      var x = (func1.b - func2.b) / (func2.a - func1.a);
+      return {
+        x: x,
+        y: func1.a * x + func1.b
+      }
+    }
+
+    function _getParallelFunciton(a, point) {
+      var _a = (-1) * (1/a);
+      return {
+        a: _a,
+        b: point.y - _a * point.x
+      }; 
+    }
+
+    function _calculateArea(pointsForStrategy, rPoint) {
+      var hPoint, bPoint, b, bFunc, hFunc, hCrossingPoint,
+          length01 = _calcLength(pointsForStrategy[0], pointsForStrategy[1]),
+          length02 = _calcLength(pointsForStrategy[0], pointsForStrategy[2]);
+
+      if (length01 < length02) {
+        hPoint = pointsForStrategy[1];
+        bPoint = pointsForStrategy[2];
+        b = length02;
+      } else {
+        hPoint = pointsForStrategy[2];
+        bPoint = pointsForStrategy[1];
+        b = length01;
+      }
+
+      bFunc = _getLineFunction(pointsForStrategy[0], bPoint);
+      hFunc = _getParallelFunciton(bFunc.a, hPoint);
+      hCrossingPoint = _getCrossingPoint(bFunc, hFunc);
+      console.log(hCrossingPoint);
+      return hCrossingPoint;
+    }
+
     function fitsCanvas(point) {
-      // console.log(point.x + "<=" + _canvasWidth )
-      // console.log(point.y + "<=" + _canvasHeight )
-      // if (point.x < 0 || point.y < 0)
-      //   return;
       return (point.x > 0 && point.y > 0)
               && point.x <= _canvasWidth 
               && point.y <= _canvasHeight;
@@ -52,18 +102,22 @@
 
     return {
       calculateRemainingPoint: function(pointPositions){
-        var rPoint = _calculateRemainingPoint(pickPointsForStrategy(pointPositions));
+        var pointsForStrategy = pickPointsForStrategy(pointPositions),
+            rPoint = _calculateRemainingPoint(pointsForStrategy);
         if (fitsCanvas(rPoint))
           return {
             rPoint: rPoint,
-            strategy: POINT_STRATEGY[_strategyIndex]  
+            strategy: POINT_STRATEGY[_strategyIndex],
+            area: _calculateArea(pointsForStrategy, rPoint)
           }
         for (_strategyIndex = 0; _strategyIndex < POINT_STRATEGY.length; _strategyIndex++) {
-          rPoint = _calculateRemainingPoint(pickPointsForStrategy(pointPositions));
+          pointsForStrategy = pickPointsForStrategy(pointPositions);
+          rPoint = _calculateRemainingPoint(pointsForStrategy);
           if (fitsCanvas(rPoint))
             return {
               rPoint: rPoint,
-              strategy: POINT_STRATEGY[_strategyIndex]  
+              strategy: POINT_STRATEGY[_strategyIndex],
+              area: _calculateArea(pointsForStrategy, rPoint)
             }
         }        
         _strategyIndex = 0;
