@@ -143,6 +143,7 @@
         y = point.y - y;
       else
         y = point.y + y;
+      
       return {
         x: x,
         y: y

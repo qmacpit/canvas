@@ -6,18 +6,22 @@
         _aboutLink = document.createElement("a"), 
         _elements = {};
 
-    _resetLink.innerHTML = "reset"; 
-    _resetLink.href = "#"; 
+        _init();
 
-    _aboutLink.innerHTML = "about";
-    _aboutLink.href = "#";
+    function _init() {
+      _resetLink.innerHTML = "reset"; 
+      _resetLink.href = "#"; 
 
-    _container.appendChild(_aboutLink);
-    _container.appendChild(_resetLink);
+      _aboutLink.innerHTML = "about";
+      _aboutLink.href = "#";
 
-    _aboutLink.addEventListener("click", function(){
-      alert("author: Maciej Pitucha \nhow to: \n- click on a client area in order to create a point\n- all selected points can be moved around \n-parallelogram will be drawn as soon as it is possible");
-    })
+      _container.appendChild(_aboutLink);
+      _container.appendChild(_resetLink);
+
+      _aboutLink.addEventListener("click", function(){
+        alert("author: Maciej Pitucha \nhow to: \n- click on a client area in order to create a point\n- all selected points can be moved around \n- parallelogram will be drawn as soon as it is possible");
+      });
+    }
 
     function _createElement() {
       var element = document.createElement("span");
