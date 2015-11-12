@@ -127,7 +127,7 @@
         }        
         _strategyIndex = 0;
       },
-      findCentreOfMass(pointPositions, rPointData) {
+      findCentreOfMass: function(pointPositions, rPointData) {
         var currentStrategy = rPointData.strategy,
             rPoint = rPointData.rPoint,
             point = pointPositions[currentStrategy[0]],

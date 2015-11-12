@@ -3,13 +3,21 @@
   var NO_OF_POINTS = 3;
 
   var CanvasController = function(canvasElement) {
-    this._stage = new createjs.Stage(canvasElement);    
     this._points = [];
     this._lines = [];
     this._pointPositions = [];
     this._calculator = new App.Calculator(canvasElement.width, canvasElement.height);
     this._legendController = new App.LegendController();
     
+    this._preapreStage(canvasElement);
+  };  
+
+  function _buildPointData(x, y) {
+    return "(" + x + "," + y + ")";
+  }
+
+  CanvasController.prototype._preapreStage = function(canvasElement) {
+    this._stage = new createjs.Stage(canvasElement);    
     this.background = new createjs.Shape();
     this.background
       .graphics
@@ -18,11 +26,22 @@
     this._stage.stage.addChild(this.background);
     this.background.on("click", this.onCanvasClicked.bind(this), null, false, null, false);
     this._stage.update();
-  };  
+  };
 
-  function _buildPointData(x, y) {
-    return "(" + x + "," + y + ")";
-  }
+  CanvasController.prototype._drawSingleLine = function(index, start, stop) {
+    var line = this._lines[index];
+    if (!line) {      
+      line = new App.Line({
+        start: start,
+        end: stop,
+        stage: this._stage
+      });
+      this._lines[index] = line;
+      line.draw();
+    } else {
+      line.redraw(start, stop);
+    }
+  };
 
   CanvasController.prototype.onCanvasClicked = function(event) {    
     if (this._points.length < NO_OF_POINTS) {
@@ -47,7 +66,7 @@
         this.evaluateRemainingPoint();        
       }
     }
-  }
+  };
 
   CanvasController.prototype.pointPositionChanged = function(id, x, y) {    
     this._legendController.report(
@@ -77,32 +96,15 @@
       this.drawLines(remainingPoint); 
       this.drawCentreOfMass(remainingPoint);            
     }
-  };
-
-  //TODO: move to prototype
-  function _drawSingleLine(index, start, stop) {
-    var line = this._lines[index];
-    if (!line) {      
-      line = new App.Line({
-        start: start,
-        end: stop,
-        stage: this._stage
-      });
-      this._lines[index] = line;
-      line.draw();
-    } else {
-      line.redraw(start, stop);
-    }
-
-  }
+  };  
 
   CanvasController.prototype.drawLines = function(remainingPoint) {
     if (remainingPoint) {
       var strategy = remainingPoint.strategy;      
-      _drawSingleLine.call(this, 0, this._pointPositions[strategy[0]], this._pointPositions[strategy[1]]);      
-      _drawSingleLine.call(this, 1, this._pointPositions[strategy[0]], this._pointPositions[strategy[2]]);
-      _drawSingleLine.call(this, 2, remainingPoint.rPoint, this._pointPositions[strategy[1]]);      
-      _drawSingleLine.call(this, 3, remainingPoint.rPoint, this._pointPositions[strategy[2]]);
+      this._drawSingleLine(0, this._pointPositions[strategy[0]], this._pointPositions[strategy[1]]);      
+      this._drawSingleLine(1, this._pointPositions[strategy[0]], this._pointPositions[strategy[2]]);
+      this._drawSingleLine(2, remainingPoint.rPoint, this._pointPositions[strategy[1]]);      
+      this._drawSingleLine(3, remainingPoint.rPoint, this._pointPositions[strategy[2]]);
     } else {      
       for (var i = 0, l = this._lines.length; i < l; i++)
         this._lines[0].remove();
@@ -121,16 +123,7 @@
       point: centerPoint,
       radius: radius
     });
-    this._circle.draw();
-    // if (this._centreOfMass)
-    //   this._centreOfMass.remove();
-    // this._centreOfMass = new App.Point({        
-    //   x: centerPoint.x,
-    //   y: centerPoint.y,
-    //   stage: this._stage,
-    //   color: "#f1c40f"        
-    // });
-    // this._centreOfMass.draw();    
+    this._circle.draw();    
   };
 
   App.CanvasController = CanvasController;

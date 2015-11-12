@@ -5,13 +5,7 @@
         _end = config.end, 
         _stage = config.stage,        
         _line;   
-
-    function _needsRedraw(start, end) {
-      // return (start.x !== _start.x)
-      //         || (end.y !== _end.y)      
-      return true;              
-    }
-
+    
     return {
       draw: function() {        
         var width = _end.x - _start.x,
@@ -27,18 +21,10 @@
         _stage.update();
       },
       redraw: function(start, end) {    
-        if (_needsRedraw(start, end)) {
-          _start = start;
-          _end = end;
-          this.remove();
-          this.draw();
-        } else {
-          console.log(start)
-          console.log(_start)
-          console.log(end)
-          console.log(_end)
-        }   
-
+        _start = start;
+        _end = end;
+        this.remove();
+        this.draw();
       },
       remove() {
         _stage.removeChild(_line);
