@@ -25,6 +25,7 @@
       },
       remove() {
         _stage.removeChild(_circle);
+        _stage.update();
       }
     };
   };

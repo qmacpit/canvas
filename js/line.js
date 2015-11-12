@@ -28,6 +28,7 @@
       },
       remove() {
         _stage.removeChild(_line);
+        _stage.update();
       }
     };
   };

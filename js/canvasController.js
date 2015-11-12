@@ -8,6 +8,7 @@
     this._pointPositions = [];
     this._calculator = new App.Calculator(canvasElement.width, canvasElement.height);
     this._legendController = new App.LegendController();
+    this._legendController.bindReset(this.reset.bind(this));
     
     this._preapreStage(canvasElement);
   };  
@@ -41,6 +42,31 @@
     } else {
       line.redraw(start, stop);
     }
+  };
+
+  CanvasController.prototype._invalidate = function() {
+    for (i = 0, l = this._lines.length; i < l; i++)
+      this._lines[i].remove();
+    this._lines = [];
+
+    if (this._circle) {
+      this._circle.remove();
+      delete this._circle;
+    }
+    this._legendController.report("circleArea", "");
+    this._legendController.report("rectArea", "");
+  };
+
+
+  CanvasController.prototype.reset = function(event) {
+    var i = 0, l = this._points.length;
+    for (; i < l; i++)
+      this._points[i].remove();
+    this._pointPositions = [];
+    this._points = [];
+
+    this._invalidate();
+
   };
 
   CanvasController.prototype.onCanvasClicked = function(event) {    
@@ -95,6 +121,8 @@
       ); 
       this.drawLines(remainingPoint); 
       this.drawCentreOfMass(remainingPoint);            
+    } else {
+      this._invalidate();
     }
   };  
 

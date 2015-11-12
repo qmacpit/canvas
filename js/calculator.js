@@ -85,13 +85,13 @@
       return Math.sqrt(area / Math.PI);
     }
 
-    function fitsCanvas(point) {
+    function _fitsCanvas(point) {
       return (point.x > 0 && point.y > 0)
               && point.x <= _canvasWidth 
               && point.y <= _canvasHeight;
     }
 
-    function pickPointsForStrategy(pointPositions) {
+    function _pickPointsForStrategy(pointPositions) {
       var currentStrategy = POINT_STRATEGY[_strategyIndex];
       if (!currentStrategy) {
         var i = 0;
@@ -105,18 +105,18 @@
     }
 
     function _calculateRemainingPoint(pointPositions) {
-      var pointsForStrategy = pickPointsForStrategy(pointPositions),
+      var pointsForStrategy = _pickPointsForStrategy(pointPositions),
           rPoint = _calcRemainingPoint(pointsForStrategy);
-      if (fitsCanvas(rPoint))
+      if (_fitsCanvas(rPoint))
         return {
           rPoint: rPoint,
           strategy: POINT_STRATEGY[_strategyIndex],
           area: _calculateArea(pointsForStrategy, rPoint)
         }
       for (_strategyIndex = 0; _strategyIndex < POINT_STRATEGY.length; _strategyIndex++) {
-        pointsForStrategy = pickPointsForStrategy(pointPositions);
+        pointsForStrategy = _pickPointsForStrategy(pointPositions);
         rPoint = _calcRemainingPoint(pointsForStrategy);
-        if (fitsCanvas(rPoint))
+        if (_fitsCanvas(rPoint))
           return {
             rPoint: rPoint,
             strategy: POINT_STRATEGY[_strategyIndex],
